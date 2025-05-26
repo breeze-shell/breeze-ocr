@@ -73,7 +73,6 @@ std::vector<std::string> load_charset(const std::string &model_dir) {
 
 void CRNNRecognizer::loadModel(std::string_view model_path) {
   net = breeze_ocr::loadModel(model_path);
-  net->opt.use_vulkan_compute = true;
 
   std::filesystem::path path(model_path);
   std::string model_dir = path.parent_path().string();

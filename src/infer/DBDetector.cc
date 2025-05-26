@@ -130,8 +130,6 @@ findRotatedRect(const std::vector<cv::Point> &contour) {
 
 void DBDetector::loadModel(std::string_view model_path) {
   net = breeze_ocr::loadModel(model_path);
-
-  net->opt.use_vulkan_compute = true;
 }
 
 TextDetectionResult DBDetector::detect(const cv::Mat &image) {
@@ -161,7 +159,9 @@ TextDetectionResult DBDetector::detect(const cv::Mat &image) {
   ex.input("in0", in);
 
   ncnn::Mat out;
-  ex.extract("out0", out);
+  if(!ex.extract("out0", out)) {
+    throw std::runtime_error("Failed to extract output from model");
+  }
 
   float *prob_data = (float *)out.data;
   int height = out.h;
